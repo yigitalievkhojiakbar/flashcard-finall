@@ -2,35 +2,75 @@ from flask import Flask, render_template, request, jsonify
 import os
 import json
 from datetime import datetime
-import logging
-
-# Logging sozlamalari
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+import requests
 
 app = Flask(__name__)
 
-# Bot sozlamalari - Environment Variables dan o'qiladi
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-WEBAPP_URL = os.environ.get("WEBAPP_URL", "")
+# Bot token va webapp url
+BOT_TOKEN = "8908338925:AAGRxfWNRNStIYAbCNiZL4Q0eWIrePY84zE"
+WEBAPP_URL = "https://flashcard-finall.onrender.com"
 
+# Telegram bot API orqali xabar yuborish funksiyasi
+def send_telegram_message(chat_id, text, reply_markup=None):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML"
+    }
+    if reply_markup:
+        data["reply_markup"] = reply_markup
+    
+    try:
+        response = requests.post(url, json=data)
+        return response.json()
+    except Exception as e:
+        print(f"Xato: {e}")
+        return None
+
+# Asosiy sahifa
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/webhook', methods=['GET', 'POST'])
+# Webhook - Telegram xabarlarini qabul qilish
+@app.route('/webhook', methods=['POST'])
 def webhook():
-    if request.method == 'GET':
-        return "Webhook is active", 200
-    
     try:
-        # Webhook POST so'rovlarini qabul qilish
-        logger.info("Webhook called")
+        # Telegramdan kelgan ma'lumotni olish
+        update = request.get_json()
+        
+        if not update:
+            return "ok", 200
+        
+        # Xabarni tekshirish
+        if 'message' in update:
+            message = update['message']
+            chat_id = message['chat']['id']
+            text = message.get('text', '')
+            
+            # /start buyrug'ini tekshirish
+            if text == '/start':
+                # Tugma yaratish
+                reply_markup = {
+                    "inline_keyboard": [
+                        [{"text": "📚 Open", "web_app": {"url": WEBAPP_URL}}]
+                    ]
+                }
+                
+                # Xabar yuborish
+                send_telegram_message(
+                    chat_id,
+                    f"👋 Salom!\n\n📚 Flashcardlar ishlashga tayyor!\n\nQuyidagi Open tugmasini bosing va so'z yodlashni boshlang.",
+                    reply_markup
+                )
+        
         return "ok", 200
     except Exception as e:
-        logger.error(f"Webhook error: {e}")
-        return "error", 500
+        print(f"Webhook xato: {e}")
+        return "ok", 200  # Har doim "ok" qaytarish kerak
 
+# API endpointlar
 @app.route('/api/save', methods=['POST'])
 def save_data():
     try:
@@ -43,7 +83,6 @@ def save_data():
             json.dump({'cards': cards, 'saved_at': datetime.now().isoformat()}, f, ensure_ascii=False, indent=2)
         return jsonify({'status': 'success'})
     except Exception as e:
-        logger.error(f"Save error: {e}")
         return jsonify({'status': 'error', 'message': str(e)})
 
 @app.route('/api/load', methods=['GET'])
@@ -70,7 +109,6 @@ def save_results():
             json.dump({'results': results, 'saved_at': datetime.now().isoformat()}, f, ensure_ascii=False, indent=2)
         return jsonify({'status': 'success'})
     except Exception as e:
-        logger.error(f"Save results error: {e}")
         return jsonify({'status': 'error', 'message': str(e)})
 
 if __name__ == '__main__':
