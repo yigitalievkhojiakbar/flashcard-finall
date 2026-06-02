@@ -153,7 +153,6 @@ function updateStats() {
     startButton.disabled = (filled === 0);
 }
 
-// Start Study - Tuzatilgan
 function startStudy() {
     const filledCards = appState.cards.filter(card => card.front.trim() && card.back.trim());
     if (filledCards.length === 0) {
@@ -166,7 +165,6 @@ function startStudy() {
     appState.answers = {};
     appState.totalShown = 0;
     
-    // Tugmalarni faollashtirish
     correctBtn.disabled = false;
     incorrectBtn.disabled = false;
     correctBtn.classList.remove("clicked");
@@ -185,6 +183,8 @@ function displayCurrentCard() {
     const card = appState.studyCards[appState.currentCardIndex];
     flashcardFront.textContent = card.front;
     flashcardBack.textContent = card.back;
+    
+    // AVTOMATIK AYLANISHNI O'CHIRISH - har doim oldinga holatda boshlash
     appState.isFlipped = false;
     flashcard.classList.remove("flipped");
 }
@@ -202,6 +202,7 @@ function handleAnswer(isCorrect) {
     const cardId = appState.studyCards[appState.currentCardIndex].id;
     appState.answers[cardId] = isCorrect;
     appState.totalShown++;
+    
     setTimeout(() => {
         if (appState.currentCardIndex < appState.studyCards.length - 1) {
             appState.currentCardIndex++;
@@ -215,7 +216,6 @@ function handleAnswer(isCorrect) {
     }, 500);
 }
 
-// Finish Study - Tuzatilgan
 function finishStudy() {
     correctBtn.disabled = false;
     incorrectBtn.disabled = false;
@@ -258,6 +258,8 @@ function switchMode(newMode) {
 }
 
 function toggleFlip() {
+    // Faqat study mode da aylanish mumkin
+    if (appState.mode !== "study") return;
     appState.isFlipped = !appState.isFlipped;
     if (appState.isFlipped) {
         flashcard.classList.add("flipped");
@@ -284,18 +286,31 @@ function attachEventListeners() {
     if (incorrectBtn) incorrectBtn.addEventListener("click", () => handleAnswer(false));
     if (correctBtn) correctBtn.addEventListener("click", () => handleAnswer(true));
     
-    // Tuzatilgan restart va back buttonlar
+    // Review (restart) - yangidan boshlash
     if (restartButton) {
         restartButton.addEventListener("click", () => {
-            appState.studyCards = [];
-            appState.currentCardIndex = 0;
-            appState.answers = {};
-            appState.totalShown = 0;
-            correctBtn.disabled = false;
-            incorrectBtn.disabled = false;
-            switchMode("manage");
+            // To'liq qayta boshlash
+            const filledCards = appState.cards.filter(card => card.front.trim() && card.back.trim());
+            if (filledCards.length > 0) {
+                appState.studyCards = [...filledCards].sort(() => Math.random() - 0.5);
+                appState.currentCardIndex = 0;
+                appState.isFlipped = false;
+                appState.answers = {};
+                appState.totalShown = 0;
+                correctBtn.disabled = false;
+                incorrectBtn.disabled = false;
+                correctBtn.classList.remove("clicked");
+                incorrectBtn.classList.remove("clicked");
+                switchMode("study");
+                displayCurrentCard();
+                updateProgress();
+            } else {
+                switchMode("manage");
+            }
         });
     }
+    
+    // Back - asosiy menyuga qaytish
     if (backButton) {
         backButton.addEventListener("click", () => {
             switchMode("manage");
