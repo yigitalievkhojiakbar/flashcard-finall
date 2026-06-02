@@ -2,44 +2,35 @@ from flask import Flask, render_template, request, jsonify
 import os
 import json
 from datetime import datetime
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import Application, CommandHandler, ContextTypes
+import logging
+
+# Logging sozlamalari
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Bot sozlamalari
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
-WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://your-app.onrender.com")
+# Bot sozlamalari - Environment Variables dan o'qiladi
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+WEBAPP_URL = os.environ.get("WEBAPP_URL", "")
 
-# Telegram bot handler
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    keyboard = [[InlineKeyboardButton("📚 Open", web_app=WebAppInfo(url=WEBAPP_URL))]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    await update.message.reply_text(
-        f"👋 Salom {user.first_name}!\n\n📚 Flashcardlar ishlashga tayyor!\n\nQuyidagi Open tugmasini bosing va so'z yodlashni boshlang.",
-        reply_markup=reply_markup
-    )
-
-# Flask route
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Webhook endpoint
-@app.route('/webhook', methods=['POST'])
-async def webhook():
-    if request.method == "POST":
-        application = Application.builder().token(BOT_TOKEN).build()
-        application.add_handler(CommandHandler("start", start))
-        
-        update = Update.de_json(request.get_json(force=True), application.bot)
-        await application.process_update(update)
+@app.route('/webhook', methods=['GET', 'POST'])
+def webhook():
+    if request.method == 'GET':
+        return "Webhook is active", 200
+    
+    try:
+        # Webhook POST so'rovlarini qabul qilish
+        logger.info("Webhook called")
         return "ok", 200
-    return "method not allowed", 405
+    except Exception as e:
+        logger.error(f"Webhook error: {e}")
+        return "error", 500
 
-# API endpointlar
 @app.route('/api/save', methods=['POST'])
 def save_data():
     try:
@@ -52,6 +43,7 @@ def save_data():
             json.dump({'cards': cards, 'saved_at': datetime.now().isoformat()}, f, ensure_ascii=False, indent=2)
         return jsonify({'status': 'success'})
     except Exception as e:
+        logger.error(f"Save error: {e}")
         return jsonify({'status': 'error', 'message': str(e)})
 
 @app.route('/api/load', methods=['GET'])
@@ -78,6 +70,7 @@ def save_results():
             json.dump({'results': results, 'saved_at': datetime.now().isoformat()}, f, ensure_ascii=False, indent=2)
         return jsonify({'status': 'success'})
     except Exception as e:
+        logger.error(f"Save results error: {e}")
         return jsonify({'status': 'error', 'message': str(e)})
 
 if __name__ == '__main__':
