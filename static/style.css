@@ -1,3 +1,29 @@
+/* Telegram WebApp ichida surilish va zoomni oldini olish */
+body {
+    touch-action: pan-y pinch-zoom;  /* Faqat vertikal surilish ruxsat, zoom cheklangan */
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Yoki agar butunlay zoom va surilishni o‘chirmoqchi bo‘lsangiz: */
+.no-scroll-zoom {
+    touch-action: none;  /* Hech qanday surilish va zoom yo‘q */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+/* Flashcard container teginish bilan aylanish uchun */
+.flashcard-container {
+    touch-action: pan-x pan-y;  /* Faqat surilish, zoom yo‘q */
+}
 * {
     margin: 0;
     padding: 0;
