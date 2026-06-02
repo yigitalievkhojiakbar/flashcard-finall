@@ -49,14 +49,14 @@ const backButton = document.getElementById("backButton");
 
 // Initialize App
 function initApp() {
-    loadCardsFromLocalStorage();
+    loadCards();
     renderCards();
     attachEventListeners();
     updateStats();
 }
 
-// Load Cards from LocalStorage
-function loadCardsFromLocalStorage() {
+// Load Cards from localStorage
+function loadCards() {
     const saved = localStorage.getItem("flashcards_" + userId);
     if (saved) {
         try {
@@ -78,7 +78,7 @@ function createEmptyCards() {
     }));
 }
 
-// Save Cards to LocalStorage
+// Save Cards to localStorage
 function saveCards() {
     localStorage.setItem("flashcards_" + userId, JSON.stringify(appState.cards));
 }
@@ -124,6 +124,10 @@ function deleteCard(cardId) {
 
 // Render Cards Grid
 function renderCards() {
+    if (!cardsGrid) {
+        console.error("cardsGrid element not found!");
+        return;
+    }
     cardsGrid.innerHTML = "";
     
     appState.cards.forEach((card, idx) => {
@@ -135,7 +139,8 @@ function renderCards() {
         cardNumber.className = "card-number";
         cardNumber.textContent = "#" + (idx + 1);
         cardEl.appendChild(cardNumber);
-         if (card.front.trim()) {
+        
+        if (card.front.trim()) {
             const frontPreview = document.createElement("div");
             frontPreview.className = "card-preview";
             frontPreview.textContent = card.front.substring(0, 15);
@@ -171,11 +176,7 @@ function updateStats() {
     filledCount.textContent = filled;
     emptyCount.textContent = 50 - filled;
     
-    if (filled === 0) {
-        startButton.disabled = true;
-    } else {
-        startButton.disabled = false;
-    }
+    startButton.disabled = (filled === 0);
 }
 
 // Start Study
@@ -223,12 +224,6 @@ function updateProgress() {
 
 // Handle Answer
 function handleAnswer(isCorrect) {
-    if (isCorrect) {
-        correctBtn.classList.add("clicked");
-    } else {
-        incorrectBtn.classList.add("clicked");
-    }
-
     correctBtn.disabled = true;
     incorrectBtn.disabled = true;
 
@@ -241,9 +236,6 @@ function handleAnswer(isCorrect) {
             appState.currentCardIndex++;
             displayCurrentCard();
             updateProgress();
-            
-            correctBtn.classList.remove("clicked");
-            incorrectBtn.classList.remove("clicked");
             correctBtn.disabled = false;
             incorrectBtn.disabled = false;
         } else {
@@ -270,8 +262,7 @@ function displayResults() {
     correctCount.textContent = correct;
     incorrectCount.textContent = incorrect;
 
-    chichvordingBox.style.
-     display = "none";
+    chichvordingBox.style.display = "none";
     celebrationBox.style.display = "none";
 
     if (percentage < 90) {
