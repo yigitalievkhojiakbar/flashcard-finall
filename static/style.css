@@ -1,15 +1,23 @@
-/* Telegram WebApp ichida surilish va zoomni oldini olish */
+/* Zoom butunlay o'chirilgan, scroll ishlaydi */
+* {
+    touch-action: pan-y !important;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
     color: #ffffff;
     padding: 10px;
-    
-    /* Surilish ishlashi uchun - position: fixed ni olib tashladik */
-    overflow-x: hidden;
     overflow-y: auto;
-    width: 100%;
-    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .container {
@@ -18,29 +26,25 @@ body {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Flashcard container teginish bilan aylanish uchun */
+/* Flashcard aylanishi ishlashi uchun */
 .flashcard-container {
-    touch-action: pan-x pan-y;  /* Faqat surilish, zoom yo‘q */
+    touch-action: pan-x pan-y;
 }
+
+/* Barcha tugmalar va interaktiv elementlar */
+button, .button, .card-item, .flashcard {
+    touch-action: pan-y;
+}
+
+/* Qolgan CSS laringiz shu yerdan davom etadi... */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-html, body {
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-    color: #ffffff;
-    padding: 10px;
-    overflow-x: hidden;
 }
 
 .container {
