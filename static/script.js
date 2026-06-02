@@ -14,7 +14,7 @@ let appState = {
     totalShown: 0
 };
 
-// DOM Elements
+// DOM Elements - barcha elementlar mavjudligini tekshirish bilan
 const manageMode = document.getElementById("manageMode");
 const studyMode = document.getElementById("studyMode");
 const resultsMode = document.getElementById("resultsMode");
@@ -303,29 +303,33 @@ function toggleFlip() {
 
 // Attach Event Listeners
 function attachEventListeners() {
-    addCardBtn.addEventListener("click", addCard);
+    if (addCardBtn) addCardBtn.addEventListener("click", addCard);
     
-    frontInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            backInput.focus();
-        }
-    });
+    if (frontInput) {
+        frontInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && backInput) {
+                backInput.focus();
+            }
+        });
+    }
     
-    backInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            addCard();
-        }
-    });
+    if (backInput) {
+        backInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                addCard();
+            }
+        });
+    }
 
-    startButton.addEventListener("click", startStudy);
-    exitBtn.addEventListener("click", () => switchMode("manage"));
-    flashcardContainer.addEventListener("click", toggleFlip);
+    if (startButton) startButton.addEventListener("click", startStudy);
+    if (exitBtn) exitBtn.addEventListener("click", () => switchMode("manage"));
+    if (flashcardContainer) flashcardContainer.addEventListener("click", toggleFlip);
     
-    incorrectBtn.addEventListener("click", () => handleAnswer(false));
-    correctBtn.addEventListener("click", () => handleAnswer(true));
+    if (incorrectBtn) incorrectBtn.addEventListener("click", () => handleAnswer(false));
+    if (correctBtn) correctBtn.addEventListener("click", () => handleAnswer(true));
 
-    restartButton.addEventListener("click", () => switchMode("manage"));
-    backButton.addEventListener("click", () => switchMode("manage"));
+    if (restartButton) restartButton.addEventListener("click", () => switchMode("manage"));
+    if (backButton) backButton.addEventListener("click", () => switchMode("manage"));
 }
 
 // Start App
