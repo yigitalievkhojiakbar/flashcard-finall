@@ -153,6 +153,7 @@ function updateStats() {
     startButton.disabled = (filled === 0);
 }
 
+// Start Study - Tuzatilgan
 function startStudy() {
     const filledCards = appState.cards.filter(card => card.front.trim() && card.back.trim());
     if (filledCards.length === 0) {
@@ -164,6 +165,13 @@ function startStudy() {
     appState.isFlipped = false;
     appState.answers = {};
     appState.totalShown = 0;
+    
+    // Tugmalarni faollashtirish
+    correctBtn.disabled = false;
+    incorrectBtn.disabled = false;
+    correctBtn.classList.remove("clicked");
+    incorrectBtn.classList.remove("clicked");
+    
     switchMode("study");
     displayCurrentCard();
     updateProgress();
@@ -207,7 +215,12 @@ function handleAnswer(isCorrect) {
     }, 500);
 }
 
+// Finish Study - Tuzatilgan
 function finishStudy() {
+    correctBtn.disabled = false;
+    incorrectBtn.disabled = false;
+    correctBtn.classList.remove("clicked");
+    incorrectBtn.classList.remove("clicked");
     switchMode("results");
     displayResults();
 }
@@ -270,8 +283,24 @@ function attachEventListeners() {
     if (flashcardContainer) flashcardContainer.addEventListener("click", toggleFlip);
     if (incorrectBtn) incorrectBtn.addEventListener("click", () => handleAnswer(false));
     if (correctBtn) correctBtn.addEventListener("click", () => handleAnswer(true));
-    if (restartButton) restartButton.addEventListener("click", () => switchMode("manage"));
-    if (backButton) backButton.addEventListener("click", () => switchMode("manage"));
+    
+    // Tuzatilgan restart va back buttonlar
+    if (restartButton) {
+        restartButton.addEventListener("click", () => {
+            appState.studyCards = [];
+            appState.currentCardIndex = 0;
+            appState.answers = {};
+            appState.totalShown = 0;
+            correctBtn.disabled = false;
+            incorrectBtn.disabled = false;
+            switchMode("manage");
+        });
+    }
+    if (backButton) {
+        backButton.addEventListener("click", () => {
+            switchMode("manage");
+        });
+    }
 }
 
 window.addEventListener("DOMContentLoaded", initApp);
