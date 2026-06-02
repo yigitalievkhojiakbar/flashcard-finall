@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcard Yod olish</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -21,7 +20,7 @@
             <div class="stats">
                 <div class="stat-box">
                     <div class="stat-number" id="filledCount">0</div>
-                    <div class="stat-label">Filled </div>
+                    <div class="stat-label">Filled</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-number" id="emptyCount">50</div>
@@ -31,7 +30,7 @@
 
             <div class="add-card-section">
                 <h2 class="section-title">Add a New Card</h2>
-                <input type="text" id="frontInput" placeholder="So'z yoki ipora" class="input">
+                <input type="text" id="frontInput" placeholder="So'z yoki ibora" class="input">
                 <input type="text" id="backInput" placeholder="Tarjima yoki ta'rif" class="input">
                 <button id="addCardBtn" class="button add-button">➕ Add</button>
             </div>
@@ -93,7 +92,7 @@
 
                 <div id="chichvordingBox" class="chichvording-box" style="display: none;">
                     <p class="chichvording-text">🚫 Damn low score</p>
-                  <p class="chichvording-subtext">Hit above 90%!</p>
+                    <p class="chichvording-subtext">Hit above 90%!</p>
                 </div>
 
                 <div id="celebrationBox" class="celebration-box" style="display: none;">
@@ -107,7 +106,9 @@
         </div>
 
         <!-- FOOTER -->
-        <div class="footer">Made with Xojiakbar for learning</div>
+        <div class="footer">Made with Xojiakbar learning</div>
     </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
