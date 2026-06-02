@@ -7,32 +7,39 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 
 app = Flask(__name__)
 
+# Bot sozlamalari
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
 WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://your-app.onrender.com")
 
+# Telegram bot handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     keyboard = [[InlineKeyboardButton("📚 Open", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
+    
     await update.message.reply_text(
-        f"👋 Salom {user.first_name}!\n\n📚 Flashcard yodlash uchun Open tugmasini bosing.",
+        f"👋 Salom {user.first_name}!\n\n📚 Flashcardlar ishlashga tayyor!\n\nQuyidagi Open tugmasini bosing va so'z yodlashni boshlang.",
         reply_markup=reply_markup
     )
 
+# Flask route
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Webhook endpoint
 @app.route('/webhook', methods=['POST'])
 async def webhook():
     if request.method == "POST":
         application = Application.builder().token(BOT_TOKEN).build()
         application.add_handler(CommandHandler("start", start))
+        
         update = Update.de_json(request.get_json(force=True), application.bot)
         await application.process_update(update)
         return "ok", 200
     return "method not allowed", 405
 
+# API endpointlar
 @app.route('/api/save', methods=['POST'])
 def save_data():
     try:
