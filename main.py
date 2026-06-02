@@ -1,23 +1,16 @@
-# main.py
 from flask import Flask, render_template, request, jsonify
 import os
 import json
 from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import Dispatcher, CommandHandler, CallbackContext
+from telegram.ext import Application, CommandHandler, ContextTypes
 
 app = Flask(__name__)
 
-# Bot sozlamalari - Render Environment Variables dan o'qiladi
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
 WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://your-app.onrender.com")
 
-from telegram import Bot
-bot = Bot(token=BOT_TOKEN)
-dispatcher = Dispatcher(bot, None, use_context=True)
-
-# ---------- Telegram bot handlerlari ----------
-async def start(update: Update, context: CallbackContext):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     keyboard = [[InlineKeyboardButton("📚 Open", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -26,22 +19,20 @@ async def start(update: Update, context: CallbackContext):
         reply_markup=reply_markup
     )
 
-dispatcher.add_handler(CommandHandler("start", start))
-
-# ---------- Flask endpointlari ----------
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route(f'/webhook', methods=['POST'])
-def webhook():
+@app.route('/webhook', methods=['POST'])
+async def webhook():
     if request.method == "POST":
-        update = Update.de_json(request.get_json(force=True), bot)
-        dispatcher.process_update(update)
+        application = Application.builder().token(BOT_TOKEN).build()
+        application.add_handler(CommandHandler("start", start))
+        update = Update.de_json(request.get_json(force=True), application.bot)
+        await application.process_update(update)
         return "ok", 200
     return "method not allowed", 405
 
-# Sizning eski API laringiz (save, load, save-results) shu yerda qoladi
 @app.route('/api/save', methods=['POST'])
 def save_data():
     try:
