@@ -20,6 +20,7 @@ body {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     background-attachment: fixed;
     min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
 }
 
 .container {
@@ -29,6 +30,19 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+}
+
+/* ========== ZOOM VA SCROLL ========== */
+* {
+    touch-action: pan-y !important;
+}
+
+.flashcard-container {
+    touch-action: pan-x pan-y;
+}
+
+button, .button, .card-item, .flashcard {
+    touch-action: pan-y;
 }
 
 /* ========== HEADER ========== */
@@ -68,26 +82,17 @@ body {
     flex-wrap: wrap;
 }
 
-.folder-button {
+.folder-button, .save-button {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
-}
-
-.save-button {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-}
-
-.folder-button, .save-button, .back-button {
     padding: 10px 16px;
     border: none;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
 }
 
-.folder-button:hover, .save-button:hover, .back-button:hover {
+.folder-button:hover, .save-button:hover {
     transform: translateY(-2px);
     opacity: 0.9;
 }
@@ -137,7 +142,6 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
-    transition: all 0.2s ease;
 }
 
 .folder-open {
@@ -170,12 +174,6 @@ body {
     margin-bottom: 20px;
     align-items: center;
     flex-wrap: wrap;
-}
-
-.back-button {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* ========== MANAGE MODE - STATS ========== */
@@ -252,7 +250,7 @@ body {
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -273,13 +271,15 @@ body {
     color: white;
 }
 
+/* ========== START LEARNING TUGMASI (Tepada) ========== */
 .start-button {
     width: 100%;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     font-size: 16px;
     padding: 14px;
-    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 /* ========== CARDS GRID ========== */
@@ -301,7 +301,6 @@ body {
     justify-content: space-between;
     font-size: 11px;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .card-item.filled {
@@ -439,11 +438,10 @@ body {
     cursor: pointer;
     border: 2px solid;
     background: transparent;
-    transition: all 0.2s ease;
 }
 
-.answer-button:active {
-    transform: scale(0.95);
+.answer-button:disabled {
+    cursor: not-allowed;
 }
 
 .incorrect-button {
@@ -451,8 +449,13 @@ body {
     border-color: #ef4444;
 }
 
-.incorrect-button:hover {
+.incorrect-button:hover:not(:disabled) {
     background: rgba(239, 68, 68, 0.1);
+}
+
+.incorrect-button.clicked {
+    background: #ef4444;
+    color: white;
 }
 
 .correct-button {
@@ -460,160 +463,140 @@ body {
     border-color: #10b981;
 }
 
-.correct-button:hover {
+.correct-button:hover:not(:disabled) {
     background: rgba(16, 185, 129, 0.1);
 }
 
-/* ========== RESULTS MODE - YANGILANGAN ========== */
+.correct-button.clicked {
+    background: #10b981;
+    color: white;
+}
+
+/* ========== RESULTS MODE ========== */
 .results-container {
     background: rgba(255, 255, 255, 0.05);
-    padding: 24px 20px;
-    border-radius: 20px;
+    padding: 20px;
+    border-radius: 12px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .results-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .score-circle {
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .score-percentage {
-    font-size: 48px;
-    font-weight: 800;
-    color: white;
+    font-size: 64px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .result-stats {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
 .result-box {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 16px 24px;
-    border-radius: 16px;
-    text-align: center;
-    min-width: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .result-number {
-    font-size: 36px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
 }
 
-.correct-color { 
-    color: #10b981; 
+.correct-color {
+    color: #10b981;
 }
 
-.incorrect-color { 
-    color: #ef4444; 
+.incorrect-color {
+    color: #ef4444;
 }
 
 .result-label {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
-    margin-top: 4px;
+    font-size: 12px;
+    opacity: 0.7;
 }
 
-/* Celebration box - yangilangan */
-.celebration-box {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-radius: 20px;
-    padding: 20px;
-    margin: 20px 0;
-    animation: celebrate 0.5s ease-out;
-}
-
-.celebration-text {
-    font-size: 28px;
-    font-weight: 700;
-    color: white;
-    margin: 0 0 8px 0;
-}
-
-.celebration-subtext {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.95);
-    margin: 0;
-}
-
-/* Chichvording box - yangilangan */
+/* ========== RESULTS MESSAGES ========== */
 .chichvording-box {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    border-radius: 20px;
-    padding: 20px;
-    margin: 20px 0;
-    animation: shake 0.5s ease-out;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
 .chichvording-text {
-    font-size: 24px;
-    font-weight: 700;
-    color: white;
-    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ef4444;
+    margin: 0 0 5px 0;
 }
 
 .chichvording-subtext {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.95);
+    font-size: 12px;
+    color: rgba(239, 68, 68, 0.8);
     margin: 0;
 }
 
-@keyframes celebrate {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+.celebration-box {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+.celebration-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #10b981;
+    margin: 0 0 5px 0;
 }
 
+.celebration-subtext {
+    font-size: 12px;
+    color: rgba(16, 185, 129, 0.8);
+    margin: 0;
+}
+
+/* ========== RESULTS BUTTONS ========== */
 .restart-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
     width: 100%;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
     margin-bottom: 10px;
 }
 
-.restart-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102,126,234,0.4);
-}
-
-/* RESULTS MODE BACK BUTTON */
-.results-container .back-button {
+.back-button {
+    width: 100%;
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    width: 100%;
 }
 
-.results-container .back-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
+/* ========== FOOTER ========== */
 .footer {
     text-align: center;
     font-size: 12px;
@@ -622,10 +605,25 @@ body {
     padding-bottom: 10px;
 }
 
+/* ========== RESPONSIVE ========== */
 @media (max-width: 480px) {
-    .flashcard-container { height: 220px; }
-    .flashcard-content { font-size: 22px; }
-    .score-percentage { font-size: 40px; }
-    .score-circle { width: 140px; height: 140px; }
-    .celebration-text { font-size: 24px; }
+    .title {
+        font-size: 24px;
+    }
+
+    .flashcard-container {
+        height: 220px;
+    }
+
+    .flashcard-content {
+        font-size: 22px;
+    }
+
+    .score-percentage {
+        font-size: 48px;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
 }
