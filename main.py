@@ -39,7 +39,7 @@ def webhook():
                 }
                 send_telegram_message(
                     chat_id,
-                    "👋 Salom!\n\n📚 Flashcardlar ishlashga tayyor!\n\nQuyidagi tugmani bosing va so'z yodlashni boshlang:",
+                    "👋 Salom!\n\n📚 Flashcards are ready to use!\n\nClick the button below and start memorizing words:",
                     reply_markup
                 )
         return "ok", 200
