@@ -259,7 +259,7 @@ function addCard() {
     }
 }
 
-// ========== O'RGANISH ==========
+// ========== O'RGANISH (TO'G'IRILGAN) ==========
 function startStudy() {
     const filledCards = appState.cards.filter(card => card.front && card.front.trim() && card.back && card.back.trim());
     if (filledCards.length === 0) {
@@ -289,6 +289,7 @@ function displayCurrentCard() {
     if (flashcardFront) flashcardFront.textContent = card.front;
     if (flashcardBack) flashcardBack.textContent = card.back;
     
+    // HAR DOIM KARTANI OLD TOMONI BILAN KO'RSAT
     appState.isFlipped = false;
     if (flashcard) flashcard.classList.remove("flipped");
 }
@@ -308,10 +309,14 @@ function handleAnswer(isCorrect) {
     appState.answers[cardId] = isCorrect;
     appState.totalShown++;
     
+    // KARTANI OLD TOMONIGA QAYTARISH
+    appState.isFlipped = false;
+    if (flashcard) flashcard.classList.remove("flipped");
+    
     setTimeout(() => {
         if (appState.currentCardIndex < appState.studyCards.length - 1) {
             appState.currentCardIndex++;
-            displayCurrentCard();
+            displayCurrentCard(); // Bu funksiya old tomonni ko'rsatadi
             updateProgress();
             if (correctBtn) correctBtn.disabled = false;
             if (incorrectBtn) incorrectBtn.disabled = false;
@@ -351,11 +356,13 @@ function displayResults() {
 
 function toggleFlip() {
     if (appState.mode !== "study") return;
-    appState.isFlipped = !appState.isFlipped;
-    if (appState.isFlipped) {
-        if (flashcard) flashcard.classList.add("flipped");
-    } else {
-        if (flashcard) flashcard.classList.remove("flipped");
+    if (appState.currentCardIndex < appState.studyCards.length) {
+        appState.isFlipped = !appState.isFlipped;
+        if (appState.isFlipped) {
+            if (flashcard) flashcard.classList.add("flipped");
+        } else {
+            if (flashcard) flashcard.classList.remove("flipped");
+        }
     }
 }
 
