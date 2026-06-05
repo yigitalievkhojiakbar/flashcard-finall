@@ -7,7 +7,7 @@
 html, body {
     width: 100%;
     min-height: 100vh;
-    background: #000000;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     background-attachment: fixed;
 }
 
@@ -17,10 +17,9 @@ body {
     padding: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    background: #000000;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     background-attachment: fixed;
     min-height: 100vh;
-    -webkit-overflow-scrolling: touch;
 }
 
 .container {
@@ -56,14 +55,12 @@ button, .button, .card-item, .flashcard {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #ffffff;
 }
 
 .subtitle {
     font-size: 13px;
-    opacity: 0.6;
+    opacity: 0.7;
     margin: 0;
-    color: #aaaaaa;
 }
 
 /* ========== MODE SECTIONS ========== */
@@ -76,6 +73,108 @@ button, .button, .card-item, .flashcard {
     display: block;
 }
 
+/* ========== PAPKALAR (FOLDERS) ========== */
+.folder-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.folder-button, .save-button {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.folder-button:hover, .save-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.folders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.folder-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+}
+
+.folder-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.folder-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    word-break: break-word;
+}
+
+.folder-stats {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+}
+
+.folder-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.folder-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.folder-open {
+    background: #10b981;
+    color: white;
+}
+
+.folder-open:hover {
+    background: #059669;
+}
+
+.folder-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.folder-delete:hover {
+    background: #dc2626;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 40px;
+    opacity: 0.5;
+}
+
+.manage-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 /* ========== MANAGE MODE - STATS ========== */
 .stats {
     display: grid;
@@ -85,11 +184,10 @@ button, .button, .card-item, .flashcard {
 }
 
 .stat-box {
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     padding: 15px;
     border-radius: 10px;
     text-align: center;
-    border: 1px solid #2a2a2a;
 }
 
 .stat-number {
@@ -97,23 +195,21 @@ button, .button, .card-item, .flashcard {
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
-    color: #ffffff;
 }
 
 .stat-label {
     font-size: 12px;
-    opacity: 0.7;
+    opacity: 0.9;
     display: block;
-    color: #aaaaaa;
 }
 
 /* ========== MANAGE MODE - ADD CARD ========== */
 .add-card-section {
-    background: #0a0a0a;
+    background: rgba(255, 255, 255, 0.05);
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
-    border: 1px solid #2a2a2a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .section-title {
@@ -121,29 +217,27 @@ button, .button, .card-item, .flashcard {
     font-weight: bold;
     margin-bottom: 12px;
     margin-top: 0;
-    color: #ffffff;
 }
 
 .input {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 10px;
-    background: #1a1a1a;
-    border: 1px solid #333333;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 8px;
     color: #ffffff;
     font-size: 14px;
-    transition: all 0.3s ease;
 }
 
 .input::placeholder {
-    color: #666666;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .input:focus {
     outline: none;
-    border-color: #ffffff;
-    background: #222222;
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 /* ========== BUTTONS ========== */
@@ -172,32 +266,20 @@ button, .button, .card-item, .flashcard {
 
 .add-button {
     width: 100%;
-    background: #2a2a2a;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
-    margin-bottom: 0;
-    border: 1px solid #3a3a3a;
-}
-
-.add-button:hover:not(:disabled) {
-    background: #3a3a3a;
-    transform: translateY(-2px);
 }
 
 .start-button {
     width: 100%;
-    background: #ffffff;
-    color: #000000;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
     font-size: 16px;
     padding: 14px;
     margin-top: 20px;
 }
 
-.start-button:hover:not(:disabled) {
-    background: #e0e0e0;
-    transform: translateY(-2px);
-}
-
-/* ========== MANAGE MODE - CARDS GRID ========== */
+/* ========== CARDS GRID ========== */
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
@@ -206,7 +288,7 @@ button, .button, .card-item, .flashcard {
 }
 
 .card-item {
-    background: #0a0a0a;
+    background: rgba(255, 255, 255, 0.05);
     padding: 10px;
     border-radius: 8px;
     border: 2px solid;
@@ -216,36 +298,32 @@ button, .button, .card-item, .flashcard {
     justify-content: space-between;
     font-size: 11px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    word-wrap: break-word;
 }
 
 .card-item.filled {
-    border-color: #ffffff;
-    background: #111111;
+    border-color: #3b82f6;
 }
 
 .card-item.empty {
-    border-color: #2a2a2a;
+    border-color: rgba(255, 255, 255, 0.1);
     opacity: 0.5;
 }
 
 .card-number {
     font-size: 10px;
-    color: #666666;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .card-preview {
     font-size: 11px;
-    color: #cccccc;
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 3px;
-    line-height: 1.2;
     word-break: break-word;
 }
 
-/* ========== STUDY MODE - HEADER ========== */
+/* ========== STUDY MODE ========== */
 .study-header {
     display: flex;
     justify-content: space-between;
@@ -254,35 +332,29 @@ button, .button, .card-item, .flashcard {
 }
 
 .progress-counter {
-    background: #1a1a1a;
+    background: rgba(255, 255, 255, 0.1);
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: bold;
-    border: 1px solid #333333;
-    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .exit-button {
     width: 36px;
     height: 36px;
     padding: 0;
-    background: #1a1a1a;
-    border: 1px solid #333333;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 50%;
     color: white;
     font-size: 18px;
 }
 
-.exit-button:hover {
-    background: #2a2a2a;
-}
-
-/* ========== STUDY MODE - PROGRESS ========== */
 .progress-bar {
     width: 100%;
     height: 4px;
-    background: #1a1a1a;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
     margin-bottom: 20px;
     overflow: hidden;
@@ -290,11 +362,10 @@ button, .button, .card-item, .flashcard {
 
 .progress-fill {
     height: 100%;
-    background: #ffffff;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
     transition: width 0.3s ease;
 }
 
-/* ========== STUDY MODE - FLASHCARD ========== */
 .flashcard-container {
     width: 100%;
     height: 250px;
@@ -321,18 +392,15 @@ button, .button, .card-item, .flashcard {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    box-sizing: border-box;
     backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
     text-align: center;
-    border: 1px solid #333333;
 }
 
 .flashcard-back {
@@ -343,20 +411,15 @@ button, .button, .card-item, .flashcard {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 10px;
-    word-wrap: break-word;
+    text-align: center;
     word-break: break-word;
-    max-height: 100px;
-    overflow: hidden;
-    color: #ffffff;
 }
 
 .flip-hint {
     font-size: 12px;
-    opacity: 0.5;
-    color: #aaaaaa;
+    opacity: 0.7;
 }
 
-/* ========== STUDY MODE - ANSWER BUTTONS ========== */
 .answer-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -370,74 +433,41 @@ button, .button, .card-item, .flashcard {
     font-weight: bold;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
     border: 2px solid;
     background: transparent;
-}
-
-.answer-button:disabled {
-    cursor: not-allowed;
 }
 
 .incorrect-button {
     color: #ef4444;
     border-color: #ef4444;
-    background: transparent;
-}
-
-.incorrect-button:hover:not(:disabled) {
-    background: rgba(239, 68, 68, 0.15);
-}
-
-.incorrect-button.clicked {
-    background: #ef4444;
-    color: white;
 }
 
 .correct-button {
-    color: #22c55e;
-    border-color: #22c55e;
-    background: transparent;
-}
-
-.correct-button:hover:not(:disabled) {
-    background: rgba(34, 197, 94, 0.15);
-}
-
-.correct-button.clicked {
-    background: #22c55e;
-    color: white;
+    color: #10b981;
+    border-color: #10b981;
 }
 
 /* ========== RESULTS MODE ========== */
 .results-container {
-    background: #0a0a0a;
+    background: rgba(255, 255, 255, 0.05);
     padding: 20px;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid #2a2a2a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .results-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
-    margin-top: 0;
-    color: #ffffff;
-}
-
-.score-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    margin-top: 20px;
 }
 
 .score-percentage {
     font-size: 64px;
     font-weight: bold;
-    color: #ffffff;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .result-stats {
@@ -448,236 +478,45 @@ button, .button, .card-item, .flashcard {
 }
 
 .result-box {
-    background: #1a1a1a;
+    background: rgba(255, 255, 255, 0.05);
     padding: 15px;
     border-radius: 10px;
-    border: 1px solid #2a2a2a;
-}
-
-.result-number {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
 }
 
 .correct-color {
-    color: #22c55e;
+    color: #10b981;
 }
 
 .incorrect-color {
     color: #ef4444;
 }
 
-.result-label {
-    font-size: 12px;
-    opacity: 0.7;
-    color: #aaaaaa;
-}
-
-/* ========== RESULTS MESSAGES ========== */
-.chichvording-box {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid #ef4444;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-.chichvording-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #ef4444;
-    margin: 0 0 5px 0;
-}
-
-.chichvording-subtext {
-    font-size: 12px;
-    color: rgba(239, 68, 68, 0.8);
-    margin: 0;
-}
-
-.celebration-box {
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid #22c55e;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-.celebration-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #22c55e;
-    margin: 0 0 5px 0;
-}
-
-.celebration-subtext {
-    font-size: 12px;
-    color: rgba(34, 197, 94, 0.8);
-    margin: 0;
-}
-
-/* ========== RESULTS BUTTONS ========== */
-.restart-button {
+.restart-button, .back-button {
     width: 100%;
-    background: #2a2a2a;
-    color: white;
     margin-bottom: 10px;
-    border: 1px solid #3a3a3a;
 }
 
-.restart-button:hover:not(:disabled) {
-    background: #3a3a3a;
-    transform: translateY(-2px);
+.restart-button {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
 }
 
 .back-button {
-    width: 100%;
-    background: #1a1a1a;
+    background: rgba(255, 255, 255, 0.1);
     color: white;
-    border: 1px solid #333333;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.back-button:hover:not(:disabled) {
-    background: #2a2a2a;
-}
-
-/* ========== PAPKALAR (FOLDERS) ========== */
-.folder-header {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.folder-button, .save-button {
-    background: #2a2a2a;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 1px solid #3a3a3a;
-}
-
-.folder-button:hover, .save-button:hover {
-    background: #3a3a3a;
-}
-
-.folders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.folder-item {
-    background: #0a0a0a;
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-    border: 1px solid #2a2a2a;
-    transition: all 0.3s ease;
-}
-
-.folder-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-.folder-name {
-    font-weight: bold;
-    margin-bottom: 5px;
-    word-break: break-word;
-    color: #ffffff;
-}
-
-.folder-stats {
-    font-size: 11px;
-    opacity: 0.6;
-    margin-bottom: 10px;
-    color: #aaaaaa;
-}
-
-.folder-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.folder-actions button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.folder-open {
-    background: #2a2a2a;
-    color: white;
-    border: 1px solid #3a3a3a;
-}
-
-.folder-open:hover {
-    background: #3a3a3a;
-}
-
-.folder-delete {
-    background: #ef4444;
-    color: white;
-}
-
-.folder-delete:hover {
-    background: #dc2626;
-}
-
-.empty-message {
-    text-align: center;
-    padding: 40px;
-    opacity: 0.5;
-    color: #aaaaaa;
-}
-
-.manage-header {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* ========== FOOTER ========== */
 .footer {
     text-align: center;
     font-size: 12px;
-    opacity: 0.4;
+    opacity: 0.5;
     margin-top: 20px;
     padding-bottom: 10px;
-    color: #888888;
 }
 
-/* ========== RESPONSIVE ========== */
 @media (max-width: 480px) {
-    .title {
-        font-size: 24px;
-    }
-
-    .flashcard-container {
-        height: 220px;
-    }
-
-    .flashcard-content {
-        font-size: 22px;
-    }
-
-    .score-percentage {
-        font-size: 48px;
-    }
-
-    .cards-grid {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    }
+    .flashcard-container { height: 220px; }
+    .flashcard-content { font-size: 22px; }
+    .score-percentage { font-size: 48px; }
 }
