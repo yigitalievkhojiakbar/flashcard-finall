@@ -135,6 +135,7 @@ function createNewFolder() {
     renderFolders();
 }
 
+// ========== TUZATILGAN openFolder - SAHIFA BOSHIDAN OCHILADI ==========
 function openFolder(folderId) {
     const folder = folders.find(f => f.id === folderId);
     if (!folder) return;
@@ -146,6 +147,14 @@ function openFolder(folderId) {
     renderCards();
     updateStats();
     switchMode("manage");
+    
+    // SAHIFANI TEPAGA (BOSHIGA) OLIB CHIQISH
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Silliq scroll
+    });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 
 function deleteFolder(folderId) {
@@ -259,7 +268,7 @@ function addCard() {
     }
 }
 
-// ========== O'RGANISH (TO'G'IRILGAN) ==========
+// ========== O'RGANISH ==========
 function startStudy() {
     const filledCards = appState.cards.filter(card => card.front && card.front.trim() && card.back && card.back.trim());
     if (filledCards.length === 0) {
@@ -316,7 +325,7 @@ function handleAnswer(isCorrect) {
     setTimeout(() => {
         if (appState.currentCardIndex < appState.studyCards.length - 1) {
             appState.currentCardIndex++;
-            displayCurrentCard(); // Bu funksiya old tomonni ko'rsatadi
+            displayCurrentCard();
             updateProgress();
             if (correctBtn) correctBtn.disabled = false;
             if (incorrectBtn) incorrectBtn.disabled = false;
@@ -378,6 +387,10 @@ function switchMode(newMode) {
         renderFolders();
     } else if (newMode === "manage") {
         if (manageMode) manageMode.classList.add("active");
+        // Manage modega o'tganda ham scroll top
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
     } else if (newMode === "study") {
         if (studyMode) studyMode.classList.add("active");
     } else if (newMode === "results") {
