@@ -31,19 +31,6 @@ body {
     min-height: 100vh;
 }
 
-/* ========== ZOOM VA SCROLL ========== */
-* {
-    touch-action: pan-y !important;
-}
-
-.flashcard-container {
-    touch-action: pan-x pan-y;
-}
-
-button, .button, .card-item, .flashcard {
-    touch-action: pan-y;
-}
-
 /* ========== HEADER ========== */
 .header {
     text-align: center;
@@ -81,17 +68,26 @@ button, .button, .card-item, .flashcard {
     flex-wrap: wrap;
 }
 
-.folder-button, .save-button {
+.folder-button {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
+}
+
+.save-button {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.folder-button, .save-button, .back-button {
     padding: 10px 16px;
     border: none;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.folder-button:hover, .save-button:hover {
+.folder-button:hover, .save-button:hover, .back-button:hover {
     transform: translateY(-2px);
     opacity: 0.9;
 }
@@ -141,6 +137,7 @@ button, .button, .card-item, .flashcard {
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
+    transition: all 0.2s ease;
 }
 
 .folder-open {
@@ -173,6 +170,12 @@ button, .button, .card-item, .flashcard {
     margin-bottom: 20px;
     align-items: center;
     flex-wrap: wrap;
+}
+
+.back-button {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* ========== MANAGE MODE - STATS ========== */
@@ -249,7 +252,7 @@ button, .button, .card-item, .flashcard {
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -298,6 +301,7 @@ button, .button, .card-item, .flashcard {
     justify-content: space-between;
     font-size: 11px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .card-item.filled {
@@ -435,6 +439,11 @@ button, .button, .card-item, .flashcard {
     cursor: pointer;
     border: 2px solid;
     background: transparent;
+    transition: all 0.2s ease;
+}
+
+.answer-button:active {
+    transform: scale(0.95);
 }
 
 .incorrect-button {
@@ -442,69 +451,167 @@ button, .button, .card-item, .flashcard {
     border-color: #ef4444;
 }
 
+.incorrect-button:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
 .correct-button {
     color: #10b981;
     border-color: #10b981;
 }
 
-/* ========== RESULTS MODE ========== */
+.correct-button:hover {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+/* ========== RESULTS MODE - YANGILANGAN ========== */
 .results-container {
     background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border-radius: 12px;
+    padding: 24px 20px;
+    border-radius: 20px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .results-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.score-percentage {
-    font-size: 64px;
-    font-weight: bold;
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
+.score-circle {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.score-percentage {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+}
+
 .result-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 28px;
 }
 
 .result-box {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 16px 24px;
+    border-radius: 16px;
+    text-align: center;
+    min-width: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.correct-color {
-    color: #10b981;
+.result-number {
+    font-size: 36px;
+    font-weight: 700;
 }
 
-.incorrect-color {
-    color: #ef4444;
+.correct-color { 
+    color: #10b981; 
 }
 
-.restart-button, .back-button {
+.incorrect-color { 
+    color: #ef4444; 
+}
+
+.result-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
+}
+
+/* Celebration box - yangilangan */
+.celebration-box {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px 0;
+    animation: celebrate 0.5s ease-out;
+}
+
+.celebration-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 8px 0;
+}
+
+.celebration-subtext {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+}
+
+/* Chichvording box - yangilangan */
+.chichvording-box {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px 0;
+    animation: shake 0.5s ease-out;
+}
+
+.chichvording-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 8px 0;
+}
+
+.chichvording-subtext {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+}
+
+@keyframes celebrate {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.restart-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
     width: 100%;
     margin-bottom: 10px;
 }
 
-.restart-button {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: white;
+.restart-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102,126,234,0.4);
 }
 
-.back-button {
+/* RESULTS MODE BACK BUTTON */
+.results-container .back-button {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 100%;
+}
+
+.results-container .back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .footer {
@@ -518,5 +625,7 @@ button, .button, .card-item, .flashcard {
 @media (max-width: 480px) {
     .flashcard-container { height: 220px; }
     .flashcard-content { font-size: 22px; }
-    .score-percentage { font-size: 48px; }
+    .score-percentage { font-size: 40px; }
+    .score-circle { width: 140px; height: 140px; }
+    .celebration-text { font-size: 24px; }
 }
