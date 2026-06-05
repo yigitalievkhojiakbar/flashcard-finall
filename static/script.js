@@ -83,7 +83,7 @@ function renderFolders() {
     if (folders.length === 0) {
         const emptyMsg = document.createElement("div");
         emptyMsg.className = "empty-message";
-        emptyMsg.textContent = "📭 There is no folder yet. Create a new folder!";
+        emptyMsg.textContent = "There is no folder yet.";
         foldersGrid.appendChild(emptyMsg);
         return;
     }
