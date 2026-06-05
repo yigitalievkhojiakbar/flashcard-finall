@@ -27,7 +27,7 @@
         <!-- MANAGE MODE (kartalar bilan ishlash) -->
         <div id="manageMode" class="mode-section">
             <div class="manage-header">
-                <button id="backToFoldersBtn" class="button back-button">📁 Files</button>
+                <button id="backToFoldersBtn" class="button back-button">◀ Back</button>
                 <button id="saveFolderBtn" class="button save-button">💾 Save</button>
                 <span id="currentFolderName" class="folder-name"></span>
             </div>
@@ -68,11 +68,11 @@
                 <div class="flashcard" id="flashcard">
                     <div class="flashcard-face flashcard-front">
                         <div class="flashcard-content" id="flashcardFront">Word</div>
-                        <div class="flip-hint">Fronte</div>
+                        <div class="flip-hint">Backp</div>
                     </div>
                     <div class="flashcard-face flashcard-back">
                         <div class="flashcard-content" id="flashcardBack">Translate</div>
-                        <div class="flip-hint">Back</div>
+                        <div class="flip-hint">Front</div>
                     </div>
                 </div>
             </div>
@@ -100,14 +100,14 @@
                     </div>
                 </div>
                 <div id="chichvordingBox" class="chichvording-box" style="display: none;">
-                    <p class="chichvording-text">🚫 Damn low score</p>
-                    <p class="chichvording-subtext">Hit above 90%!</p>
+                    <div class="chichvording-text">📉 Keep Going!</div>
+                    <div class="chichvording-subtext">Try to reach 90% next time</div>
                 </div>
                 <div id="celebrationBox" class="celebration-box" style="display: none;">
-                    <p class="celebration-text">🎉 Perfect!</p>
-                    <p class="celebration-subtext">You nailed it!</p>
+                    <div class="celebration-text">🎉 Perfect!</div>
+                    <div class="celebration-subtext">You nailed it!</div>
                 </div>
-                <button id="restartButton" class="button restart-button">Review</button>
+                <button id="restartButton" class="button restart-button"> Review</button>
                 <button id="backButton" class="button back-button">Back</button>
             </div>
         </div>
