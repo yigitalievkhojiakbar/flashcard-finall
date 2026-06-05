@@ -2,11 +2,10 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Flashcard Yod olish</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 </head>
 <body>
     <div class="container">
@@ -16,8 +15,23 @@
             <div class="subtitle">Memorizing words is easy!</div>
         </div>
 
-        <!-- MANAGE MODE -->
-        <div id="manageMode" class="mode-section active">
+        <!-- FOLDER MANAGER MODE -->
+        <div id="folderMode" class="mode-section active">
+            <div class="folder-header">
+                <button id="newFolderBtn" class="button folder-button">📁 + New file</button>
+                <button id="backToMainBtn" class="button back-button">◀ Main</button>
+            </div>
+            <div class="folders-grid" id="foldersGrid"></div>
+        </div>
+
+        <!-- MANAGE MODE (kartalar bilan ishlash) -->
+        <div id="manageMode" class="mode-section">
+            <div class="manage-header">
+                <button id="backToFoldersBtn" class="button back-button">📁 Files</button>
+                <button id="saveFolderBtn" class="button save-button">💾 Save</button>
+                <span id="currentFolderName" class="folder-name"></span>
+            </div>
+            
             <div class="stats">
                 <div class="stat-box">
                     <div class="stat-number" id="filledCount">0</div>
@@ -31,8 +45,8 @@
 
             <div class="add-card-section">
                 <h2 class="section-title">Add a New Card</h2>
-                <input type="text" id="frontInput" placeholder="Word" class="input">
-                <input type="text" id="backInput" placeholder="Translation" class="input">
+                <input type="text" id="frontInput" placeholder="So'z yoki ibora" class="input">
+                <input type="text" id="backInput" placeholder="Tarjima yoki ta'rif" class="input">
                 <button id="addCardBtn" class="button add-button">➕ Add</button>
             </div>
 
@@ -47,24 +61,21 @@
                 <div class="progress-counter" id="progressCounter">1 / 50</div>
                 <button id="exitBtn" class="button exit-button">✕</button>
             </div>
-
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-
             <div class="flashcard-container" id="flashcardContainer">
                 <div class="flashcard" id="flashcard">
                     <div class="flashcard-face flashcard-front">
                         <div class="flashcard-content" id="flashcardFront">Word</div>
-                        <div class="flip-hint">Rotate</div>
+                        <div class="flip-hint">Fronte</div>
                     </div>
                     <div class="flashcard-face flashcard-back">
                         <div class="flashcard-content" id="flashcardBack">Translate</div>
-                        <div class="flip-hint">Rotate</div>
+                        <div class="flip-hint">Back</div>
                     </div>
                 </div>
             </div>
-
             <div class="answer-buttons">
                 <button id="incorrectBtn" class="button answer-button incorrect-button">✗ Incorrect</button>
                 <button id="correctBtn" class="button answer-button correct-button">✓ Correct</button>
@@ -75,11 +86,9 @@
         <div id="resultsMode" class="mode-section">
             <div class="results-container">
                 <h2 class="results-title">Results 🎯</h2>
-                
                 <div class="score-circle">
                     <div class="score-percentage" id="scorePercentage">0%</div>
                 </div>
-
                 <div class="result-stats">
                     <div class="result-box">
                         <div class="result-number correct-color" id="correctCount">0</div>
@@ -90,17 +99,14 @@
                         <div class="result-label">Incorrect</div>
                     </div>
                 </div>
-
                 <div id="chichvordingBox" class="chichvording-box" style="display: none;">
                     <p class="chichvording-text">🚫 Damn low score</p>
                     <p class="chichvording-subtext">Hit above 90%!</p>
                 </div>
-
                 <div id="celebrationBox" class="celebration-box" style="display: none;">
                     <p class="celebration-text">🎉 Perfect!</p>
                     <p class="celebration-subtext">You nailed it!</p>
                 </div>
-
                 <button id="restartButton" class="button restart-button">Review</button>
                 <button id="backButton" class="button back-button">Back</button>
             </div>
@@ -109,6 +115,7 @@
         <!-- FOOTER -->
         <div class="footer">Made with Xojiakbar for learning</div>
     </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
