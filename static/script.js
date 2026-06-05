@@ -185,7 +185,7 @@ function saveCurrentFolder() {
     renderFolders();
 }
 
-// ========== KARTALAR (xabar chiqmaydi) ==========
+// ========== KARTALAR ==========
 function renderCards() {
     if (!cardsGrid) return;
     cardsGrid.innerHTML = "";
@@ -254,7 +254,6 @@ function addCard() {
         frontInput.value = "";
         backInput.value = "";
         frontInput.focus();
-        // BU YERDA SAVE YO'Q! FAQAT SAVE TUGMASIDA
     } else {
         alert("All cards have been filled!");
     }
@@ -264,7 +263,7 @@ function addCard() {
 function startStudy() {
     const filledCards = appState.cards.filter(card => card.front && card.front.trim() && card.back && card.back.trim());
     if (filledCards.length === 0) {
-        alert( "Add at least one card!");
+        alert("Add at least one card!");
         return;
     }
     appState.studyCards = [...filledCards].sort(() => Math.random() - 0.5);
