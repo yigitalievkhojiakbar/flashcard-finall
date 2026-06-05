@@ -5,12 +5,12 @@ const userId = tg.initDataUnsafe?.user?.id || "default";
 
 // ========== PAPKALAR TIZIMI ==========
 let folders = [];
-let currentFolder = null; // { id, name, cards }
+let currentFolder = null;
 
 // ========== APP STATE ==========
 let appState = {
     cards: [],
-    mode: "folder", // folder, manage, study, results
+    mode: "folder",
     currentCardIndex: 0,
     studyCards: [],
     isFlipped: false,
@@ -75,18 +75,6 @@ function saveFolders() {
     localStorage.setItem("flashcard_folders_" + userId, JSON.stringify(folders));
 }
 
-function saveCurrentFolderToStorage() {
-    if (currentFolder) {
-        const index = folders.findIndex(f => f.id === currentFolder.id);
-        if (index !== -1) {
-            folders[index].cards = currentFolder.cards;
-        } else {
-            folders.push(currentFolder);
-        }
-        saveFolders();
-    }
-}
-
 // ========== PAPKALAR UI ==========
 function renderFolders() {
     if (!foldersGrid) return;
@@ -95,7 +83,7 @@ function renderFolders() {
     if (folders.length === 0) {
         const emptyMsg = document.createElement("div");
         emptyMsg.className = "empty-message";
-        emptyMsg.textContent = "📭 Hozircha papka yo'q. Yangi papka yarating!";
+        emptyMsg.textContent = "📭 There is no folder yet. Create a new folder!";
         foldersGrid.appendChild(emptyMsg);
         return;
     }
@@ -104,16 +92,15 @@ function renderFolders() {
         const folderEl = document.createElement("div");
         folderEl.className = "folder-item";
         
-        const filledCount = folder.cards.filter(c => c.front && c.front.trim()).length;
-        const totalCount = folder.cards.length;
+        const filled = folder.cards.filter(c => c.front && c.front.trim()).length;
         
         folderEl.innerHTML = `
             <div class="folder-icon">📁</div>
             <div class="folder-name">${escapeHtml(folder.name)}</div>
-            <div class="folder-stats">${filledCount}/${totalCount} cards</div>
+            <div class="folder-stats">${filled}/50 kartalar</div>
             <div class="folder-actions">
-                <button class="folder-open" data-id="${folder.id}">📖 Ochish</button>
-                <button class="folder-delete" data-id="${folder.id}">🗑️ O'chir</button>
+                <button class="folder-open" data-id="${folder.id}">📖 Open</button>
+                <button class="folder-delete" data-id="${folder.id}">🗑️ Delete</button>
             </div>
         `;
         
@@ -135,7 +122,7 @@ function escapeHtml(str) {
 }
 
 function createNewFolder() {
-    const folderName = prompt("Yangi papka nomini kiriting:", "Mening so'zlarim");
+    const folderName = prompt("Enter the name of the new folder:", "My words");
     if (!folderName || folderName.trim() === "") return;
     
     const newFolder = {
@@ -152,9 +139,9 @@ function openFolder(folderId) {
     const folder = folders.find(f => f.id === folderId);
     if (!folder) return;
     
-    currentFolder = { ...folder, cards: [...folder.cards] };
-    appState.cards = [...currentFolder.cards];
-    currentFolderName.textContent = currentFolder.name;
+    currentFolder = folder;
+    appState.cards = JSON.parse(JSON.stringify(folder.cards));
+    if (currentFolderName) currentFolderName.textContent = folder.name;
     
     renderCards();
     updateStats();
@@ -162,66 +149,67 @@ function openFolder(folderId) {
 }
 
 function deleteFolder(folderId) {
-    if (confirm("Bu papkani o'chirmoqchimisiz? Barcha kartalar yo'qoladi!")) {
+    if (confirm("Do you want to delete this folder? All cards will be lost!")) {
         folders = folders.filter(f => f.id !== folderId);
         saveFolders();
         renderFolders();
         if (currentFolder && currentFolder.id === folderId) {
             currentFolder = null;
-            appState.cards = Array(50).fill(null).map((_, i) => ({ id: i, front: "", back: "" }));
         }
     }
 }
 
 function saveCurrentFolder() {
     if (!currentFolder) {
-        // Yangi papka sifatida saqlash
-        const folderName = prompt("Papka nomini kiriting:", "Yangi papka");
+        const folderName = prompt("Enter the folder name:", "New folder");
         if (!folderName || folderName.trim() === "") return;
         
         currentFolder = {
             id: Date.now().toString(),
             name: folderName.trim(),
-            cards: [...appState.cards]
+            cards: JSON.parse(JSON.stringify(appState.cards))
         };
         folders.push(currentFolder);
         saveFolders();
-        currentFolderName.textContent = currentFolder.name;
-        alert("✅ Papka saqlandi!");
+        if (currentFolderName) currentFolderName.textContent = currentFolder.name;
+        alert("✅ File saved!");
     } else {
-        // Mavjud papkani yangilash
-        currentFolder.cards = [...appState.cards];
+        currentFolder.cards = JSON.parse(JSON.stringify(appState.cards));
         const index = folders.findIndex(f => f.id === currentFolder.id);
         if (index !== -1) {
             folders[index] = { ...currentFolder };
         }
         saveFolders();
-        alert("✅ Papka yangilandi!");
+        alert("✅ File updated!");
     }
     renderFolders();
 }
 
-// ========== KARTALAR BILAN ISHLASH ==========
+// ========== KARTALAR (xabar chiqmaydi) ==========
 function renderCards() {
     if (!cardsGrid) return;
     cardsGrid.innerHTML = "";
     appState.cards.forEach((card, idx) => {
         const cardEl = document.createElement("div");
-        const cardClass = card.front && card.front.trim() ? "filled" : "empty";
-        cardEl.className = "card-item " + cardClass;
+        const isFilled = card.front && card.front.trim();
+        cardEl.className = "card-item " + (isFilled ? "filled" : "empty");
+        
         const cardNumber = document.createElement("div");
         cardNumber.className = "card-number";
         cardNumber.textContent = "#" + (idx + 1);
         cardEl.appendChild(cardNumber);
-        if (card.front && card.front.trim()) {
+        
+        if (isFilled) {
             const frontPreview = document.createElement("div");
             frontPreview.className = "card-preview";
             frontPreview.textContent = card.front.substring(0, 15);
             cardEl.appendChild(frontPreview);
+            
             const backPreview = document.createElement("div");
             backPreview.className = "card-preview";
             backPreview.textContent = card.back.substring(0, 15);
             cardEl.appendChild(backPreview);
+            
             const deleteBtn = document.createElement("button");
             deleteBtn.className = "button";
             deleteBtn.style.background = "#ef4444";
@@ -229,16 +217,13 @@ function renderCards() {
             deleteBtn.style.marginTop = "5px";
             deleteBtn.style.padding = "4px";
             deleteBtn.style.fontSize = "12px";
-            deleteBtn.textContent = "🗑️ O'chir";
+            deleteBtn.textContent = "🗑️ Delete";
             deleteBtn.onclick = (e) => {
                 e.stopPropagation();
                 card.front = "";
                 card.back = "";
                 renderCards();
                 updateStats();
-                if (currentFolder) {
-                    saveCurrentFolder();
-                }
             };
             cardEl.appendChild(deleteBtn);
         }
@@ -248,16 +233,16 @@ function renderCards() {
 
 function updateStats() {
     const filled = appState.cards.filter(c => c.front && c.front.trim() && c.back && c.back.trim()).length;
-    filledCount.textContent = filled;
-    emptyCount.textContent = 50 - filled;
-    startButton.disabled = (filled === 0);
+    if (filledCount) filledCount.textContent = filled;
+    if (emptyCount) emptyCount.textContent = 50 - filled;
+    if (startButton) startButton.disabled = (filled === 0);
 }
 
 function addCard() {
     const front = frontInput.value.trim();
     const back = backInput.value.trim();
     if (!front || !back) {
-        alert("Iltimos, ikkala maydonni to'ldiring!");
+        alert("Please, fill both sides!");
         return;
     }
     const emptyCard = appState.cards.find(c => !c.front || !c.front.trim());
@@ -269,11 +254,9 @@ function addCard() {
         frontInput.value = "";
         backInput.value = "";
         frontInput.focus();
-        if (currentFolder) {
-            saveCurrentFolder();
-        }
+        // BU YERDA SAVE YO'Q! FAQAT SAVE TUGMASIDA
     } else {
-        alert("Barcha kartalar to'ldirilgan!");
+        alert("All cards have been filled!");
     }
 }
 
@@ -281,7 +264,7 @@ function addCard() {
 function startStudy() {
     const filledCards = appState.cards.filter(card => card.front && card.front.trim() && card.back && card.back.trim());
     if (filledCards.length === 0) {
-        alert("Kamida bir kartani qo'shing!");
+        alert( "Add at least one card!");
         return;
     }
     appState.studyCards = [...filledCards].sort(() => Math.random() - 0.5);
@@ -290,10 +273,8 @@ function startStudy() {
     appState.answers = {};
     appState.totalShown = 0;
     
-    correctBtn.disabled = false;
-    incorrectBtn.disabled = false;
-    correctBtn.classList.remove("clicked");
-    incorrectBtn.classList.remove("clicked");
+    if (correctBtn) correctBtn.disabled = false;
+    if (incorrectBtn) incorrectBtn.disabled = false;
     
     switchMode("study");
     displayCurrentCard();
@@ -306,24 +287,24 @@ function displayCurrentCard() {
         return;
     }
     const card = appState.studyCards[appState.currentCardIndex];
-    flashcardFront.textContent = card.front;
-    flashcardBack.textContent = card.back;
+    if (flashcardFront) flashcardFront.textContent = card.front;
+    if (flashcardBack) flashcardBack.textContent = card.back;
     
-    // MUHIM: Har doim oldinga holatda boshlash
     appState.isFlipped = false;
-    flashcard.classList.remove("flipped");
+    if (flashcard) flashcard.classList.remove("flipped");
 }
 
 function updateProgress() {
     const total = appState.studyCards.length;
     const current = appState.currentCardIndex + 1;
-    progressCounter.textContent = current + " / " + total;
-    progressFill.style.width = ((current / total) * 100) + "%";
+    if (progressCounter) progressCounter.textContent = current + " / " + total;
+    if (progressFill) progressFill.style.width = ((current / total) * 100) + "%";
 }
 
 function handleAnswer(isCorrect) {
-    correctBtn.disabled = true;
-    incorrectBtn.disabled = true;
+    if (correctBtn) correctBtn.disabled = true;
+    if (incorrectBtn) incorrectBtn.disabled = true;
+    
     const cardId = appState.studyCards[appState.currentCardIndex].id;
     appState.answers[cardId] = isCorrect;
     appState.totalShown++;
@@ -333,8 +314,8 @@ function handleAnswer(isCorrect) {
             appState.currentCardIndex++;
             displayCurrentCard();
             updateProgress();
-            correctBtn.disabled = false;
-            incorrectBtn.disabled = false;
+            if (correctBtn) correctBtn.disabled = false;
+            if (incorrectBtn) incorrectBtn.disabled = false;
         } else {
             finishStudy();
         }
@@ -342,8 +323,8 @@ function handleAnswer(isCorrect) {
 }
 
 function finishStudy() {
-    correctBtn.disabled = false;
-    incorrectBtn.disabled = false;
+    if (correctBtn) correctBtn.disabled = false;
+    if (incorrectBtn) incorrectBtn.disabled = false;
     switchMode("results");
     displayResults();
 }
@@ -352,17 +333,20 @@ function displayResults() {
     const correct = Object.values(appState.answers).filter(v => v === true).length;
     const incorrect = appState.totalShown - correct;
     const percentage = appState.totalShown > 0 ? Math.round((correct / appState.totalShown) * 100) : 0;
-    scorePercentage.textContent = percentage + "%";
-    correctCount.textContent = correct;
-    incorrectCount.textContent = incorrect;
-    chichvordingBox.style.display = "none";
-    celebrationBox.style.display = "none";
+    
+    if (scorePercentage) scorePercentage.textContent = percentage + "%";
+    if (correctCount) correctCount.textContent = correct;
+    if (incorrectCount) incorrectCount.textContent = incorrect;
+    
+    if (chichvordingBox) chichvordingBox.style.display = "none";
+    if (celebrationBox) celebrationBox.style.display = "none";
+    
     if (percentage < 90) {
-        chichvordingBox.style.display = "block";
-        scorePercentage.style.color = "#ef4444";
+        if (chichvordingBox) chichvordingBox.style.display = "block";
+        if (scorePercentage) scorePercentage.style.color = "#ef4444";
     } else {
-        celebrationBox.style.display = "block";
-        scorePercentage.style.color = "#10b981";
+        if (celebrationBox) celebrationBox.style.display = "block";
+        if (scorePercentage) scorePercentage.style.color = "#10b981";
     }
 }
 
@@ -370,28 +354,28 @@ function toggleFlip() {
     if (appState.mode !== "study") return;
     appState.isFlipped = !appState.isFlipped;
     if (appState.isFlipped) {
-        flashcard.classList.add("flipped");
+        if (flashcard) flashcard.classList.add("flipped");
     } else {
-        flashcard.classList.remove("flipped");
+        if (flashcard) flashcard.classList.remove("flipped");
     }
 }
 
 function switchMode(newMode) {
     appState.mode = newMode;
-    folderMode.classList.remove("active");
-    manageMode.classList.remove("active");
-    studyMode.classList.remove("active");
-    resultsMode.classList.remove("active");
+    if (folderMode) folderMode.classList.remove("active");
+    if (manageMode) manageMode.classList.remove("active");
+    if (studyMode) studyMode.classList.remove("active");
+    if (resultsMode) resultsMode.classList.remove("active");
     
     if (newMode === "folder") {
-        folderMode.classList.add("active");
+        if (folderMode) folderMode.classList.add("active");
         renderFolders();
     } else if (newMode === "manage") {
-        manageMode.classList.add("active");
+        if (manageMode) manageMode.classList.add("active");
     } else if (newMode === "study") {
-        studyMode.classList.add("active");
+        if (studyMode) studyMode.classList.add("active");
     } else if (newMode === "results") {
-        resultsMode.classList.add("active");
+        if (resultsMode) resultsMode.classList.add("active");
     }
 }
 
@@ -428,8 +412,8 @@ function attachEventListeners() {
                 appState.isFlipped = false;
                 appState.answers = {};
                 appState.totalShown = 0;
-                correctBtn.disabled = false;
-                incorrectBtn.disabled = false;
+                if (correctBtn) correctBtn.disabled = false;
+                if (incorrectBtn) incorrectBtn.disabled = false;
                 switchMode("study");
                 displayCurrentCard();
                 updateProgress();
@@ -452,7 +436,6 @@ function initApp() {
         appState.cards = Array(50).fill(null).map((_, i) => ({ id: i, front: "", back: "" }));
     }
     attachEventListeners();
-    renderFolders();
     switchMode("folder");
 }
 
