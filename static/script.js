@@ -99,8 +99,8 @@ function renderFolders() {
             <div class="folder-name">${escapeHtml(folder.name)}</div>
             <div class="folder-stats">${filled}/50 kartalar</div>
             <div class="folder-actions">
-                <button class="folder-open" data-id="${folder.id}">📖 Open</button>
-                <button class="folder-delete" data-id="${folder.id}">🗑️ Delete</button>
+                <button class="folder-open" data-id="${folder.id}">Open</button>
+                <button class="folder-delete" data-id="${folder.id}">Delete</button>
             </div>
         `;
         
@@ -226,7 +226,7 @@ function renderCards() {
             deleteBtn.style.marginTop = "5px";
             deleteBtn.style.padding = "4px";
             deleteBtn.style.fontSize = "12px";
-            deleteBtn.textContent = "🗑️ Delete";
+            deleteBtn.textContent = "Delete";
             deleteBtn.onclick = (e) => {
                 e.stopPropagation();
                 card.front = "";
